@@ -6,7 +6,6 @@ Example taken from https://github.com/apache/airflow/blob/master/airflow/provide
 """
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
-from airflow.contrib.operators.spark_submit_operator import SparkSubmitOperator
 from airflow.providers.apache.livy.operators.livy import LivyOperator
 
 from datetime import datetime, timedelta
@@ -33,14 +32,16 @@ spark_task = LivyOperator(
     class_name='org.apache.spark.examples.SparkPi', 
     args=[10], 
     conf={
-        'spark.kubernetes.container.image': 'mikaelapisani/spark-py:1.0',
-        'spark.kubernetes.authenticate.driver.serviceAccountName': 'spark'
+            "spark.kubernetes.driver.pod.name" : "spark-pi-driver",
+            "spark.kubernetes.container.image" : "rootstrap/spark-py:latest",
+            "spark.kubernetes.authenticate.driver.serviceAccountName" : "spark",
+            "spark.kubernetes.namespace" : "airflow" 
+
     },
     livy_conn_id='livy_conn_id',
     polling_interval = 60,
     dag=dag
 ) 
 
-  
 
 spark_task.set_upstream(t1)
