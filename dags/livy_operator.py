@@ -7,6 +7,8 @@ Example taken from https://github.com/apache/airflow/blob/master/airflow/provide
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.providers.apache.livy.operators.livy import LivyOperator
+from airflow.models import Variable
+
 
 from datetime import datetime, timedelta
 
@@ -38,7 +40,7 @@ spark_task = LivyOperator(
             "spark.kubernetes.namespace" : "airflow" 
 
     },
-    livy_conn_id='livy_conn_id',
+    livy_conn_id=Variable.get('livy_conn_id'),
     polling_interval = 60,
     dag=dag
 ) 
