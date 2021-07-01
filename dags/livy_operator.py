@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 default_args = {
     "owner": "airflow",
     "depends_on_past": False,
-    "start_date": datetime(2015, 6, 1),
+    "start_date": datetime(2021, 7, 1),
     "email": ["mikaela.pisani@rootstrap.com"],
     "email_on_failure": False,
     "email_on_retry": False,
@@ -28,7 +28,7 @@ dag = DAG("livy-test", default_args=default_args,schedule_interval= '@once')
 t1 = BashOperator(task_id="print_date", bash_command="date", dag=dag)
 
 spark_task = LivyOperator(
-    task_id='spark_task',
+    task_id='spark_task_' + str(datetime.datetime.today().strftime('%Y%m%d%H%M%S')),
     file='local:///opt/spark/examples/src/main/python/pi.py', 
     class_name='org.apache.spark.examples.SparkPi', 
     args=[10], 
