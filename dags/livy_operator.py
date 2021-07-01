@@ -33,7 +33,7 @@ spark_task = LivyOperator(
     class_name='org.apache.spark.examples.SparkPi', 
     args=[10], 
     conf={
-            "spark.kubernetes.driver.pod.name" : "spark-pi-driver" + + str(datetime.today().strftime('%Y%m%d%H%M%S')),
+            "spark.kubernetes.driver.pod.name" : "spark-pi-driver-" + str(datetime.today().strftime('%Y%m%d%H%M%S')),
             "spark.kubernetes.container.image" : "rootstrap/spark-py:latest",
             "spark.kubernetes.authenticate.driver.serviceAccountName" : "spark",
             "spark.kubernetes.namespace" : "airflow" 
