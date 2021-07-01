@@ -28,7 +28,7 @@ dag = DAG("livy-test", default_args=default_args,schedule_interval= '@once')
 t1 = BashOperator(task_id="print_date", bash_command="date", dag=dag)
 
 spark_task = LivyOperator(
-    task_id='spark_' + str(datetime.today().strftime('%Y%m%d%H%M%S')) + "_task",
+    task_id='spark_task' ,
     file='local:///opt/spark/examples/src/main/python/pi.py', 
     class_name='org.apache.spark.examples.SparkPi', 
     args=[10], 
