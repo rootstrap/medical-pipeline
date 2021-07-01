@@ -28,12 +28,12 @@ dag = DAG("livy-test", default_args=default_args,schedule_interval= '@once')
 t1 = BashOperator(task_id="print_date", bash_command="date", dag=dag)
 
 spark_task = LivyOperator(
-    task_id='spark_task' ,
+    task_id='spark_task',
     file='local:///opt/spark/examples/src/main/python/pi.py', 
     class_name='org.apache.spark.examples.SparkPi', 
     args=[10], 
     conf={
-            "spark.kubernetes.driver.pod.name" : "spark-pi-driver",
+            "spark.kubernetes.driver.pod.name" : "spark-pi-driver" + + str(datetime.today().strftime('%Y%m%d%H%M%S')),
             "spark.kubernetes.container.image" : "rootstrap/spark-py:latest",
             "spark.kubernetes.authenticate.driver.serviceAccountName" : "spark",
             "spark.kubernetes.namespace" : "airflow" 
