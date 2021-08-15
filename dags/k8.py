@@ -6,7 +6,12 @@ from kubernetes.client import models as k8s
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
 
 from datetime import datetime, timedelta
+from airflow.models import Variable
+from airflow.providers.cncf.kubernetes.backcompat.volume import Volume
+from airflow.providers.cncf.kubernetes.backcompat.volume_mount import VolumeMount
 
+
+CTAKES_KEY = Variable.get("CTAKES_KEY")
 
 default_args = {
     "owner": "airflow",
@@ -21,38 +26,37 @@ default_args = {
 
 dag = DAG("kubernetes-test", default_args=default_args,schedule_interval= '@once')
 
-self.volume_mount = VolumeMount('input-data',
-                                mount_path='/data',
-                                sub_path=None,
-                                read_only=False)
-
-volume_config = {
-    'persistentVolumeClaim':
-        {
-            'claimName': 'pv-claim'
-        }
-}
-volume = Volume(name='test', configs=volume_config)
-input_volume = VolumeMount('input',
-    mount_path='/input',
-    sub_path=None,
-    read_only=True)
-
-#output_volume = VolumeMount('output',
-#    mount_path='/output',
-#    sub_path=None,
-#    read_only=False)
-
-
 t1 = BashOperator(task_id="print_date", bash_command="date", dag=dag)
+
+
+volume_mount = VolumeMount('pv-claim',
+                            mount_path='input/',
+                            sub_path=None,
+                            read_only=False)
+
+
+
+volume_config= {
+    'persistentVolumeClaim':
+      {
+        'claimName': 'pv-claim'
+      }
+    }
+volume = Volume(name='pv-claim', configs=volume_config)
+
 kubernetes_min_pod = KubernetesPodOperator(
-    task_id='pod-ex-kub',
-    name='pod-ex-kub',
-    cmds=['echo'],
+    task_id='ctakes_task',
+    name='ctakes-pod-' + str(datetime.today().strftime('%Y%m%d%H%M%S')),
+    #is_delete_operator_pod=True,
     namespace='airflow',
-    volume=[volume],
-    volume_mount=[input_volume],
-    image='rootstrap/docker-airflow-ctakes', dag=dag)
+    env_vars={'CTAKES_KEY':  CTAKES_KEY , 
+              'INPUT_DIR': 'input/input/', 
+              'OUTPUT_DIR':'input/output/'
+              },
+    volumes=[volume],
+    volume_mounts=[volume_mount],
+    image='rootstrap/ctakes:latest', 
+    dag=dag)
 
 
 

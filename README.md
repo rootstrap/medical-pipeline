@@ -23,12 +23,13 @@ When we want to process huge amount of information in parallel, we can use Spark
 ```
 Following the instructions to install Airflow in EKS with EFS CSI driver. 
 
-2. Edit [values.yaml](https://github.com/rootstrap/eks-airflow/blob/main/airflow/chart/values.yaml) with the following information: 
+2. Replace  eks-airflow/blob/main/airflow/chart/values.yaml with [values.yaml](values.yaml)
 
+The following changes has been added to the file:
 
-**Custom Image repository and version**     
+*Custom Image repository and version*    
 
-```bash 
+```yaml 
 	airflowHome: /opt/airflow
 
 	defaultAirflowRepository: rootstrap/eks-airflow
@@ -40,30 +41,17 @@ Following the instructions to install Airflow in EKS with EFS CSI driver.
 	airflowVersion: "2.1.2"
 ```
 
-**Git Repository**   
+*Git Repository* 
 
-```
+```yaml
 dags:
-  persistence:
-    # Enable persistent volume for storing dags
-    enabled: false
-    # Volume size for dags
-    size: 1Gi
-    # If using a custom storageClass, pass name here
-    storageClassName:
-    # access mode of the persistent volume
-    ## the name of an existing PVC to use
-    existingClaim: ~
  gitSync:
     enabled: true
     repo: https://github.com/rootstrap/medical-pipeline.git
     branch: k8
     rev: HEAD
     depth: 1
-     # the number of consecutive failures allowed before aborting
     maxFailures: 5
-    # subpath within the repo where dags are located
-    # should be "" if dags are at repo root
     subPath: "dags"
 ```
 
