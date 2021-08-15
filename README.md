@@ -4,7 +4,7 @@ Data pipeline for processing medical text records. Dummy architecture to create 
 
 Airflow is a tool for create ETL pipelines, it provides a web interface to handle DAGs, which are a collection of tasks. Each task can be implemented as you want.    
 
-In order to process text CTakes is used. A custom Docker container that runs as a Kubernetes pod is in charge of processing XML files with CTakes extracting relevant information and codes that refers to medical terms.  
+In order to process text CTakes is used. A custom Docker container that runs as a Kubernetes pod is in charge of processing XML files with CTakes extracting relevant information and codes that refers to medical terms.  You can find more information about CTakes and the custom image used to start the container at this [repo](https://github.com/rootstrap/ctakes)
 
 When we want to process huge amount of information in parallel, we can use Spark. Apache Livy is a REST interface to execute tasks in a Spark Cluster. The Spark Cluster runs in Kubernetes.  
 
@@ -79,6 +79,10 @@ Go to Admin->Connections and add a Connection with the following parameters
 - Host: get the ClusterIP for apache-livy executing: kubectl get services | grep apache-livy | awk '{print $3}'
 - Port: 8998
 
+6. Set Variable CTAKES_KEY 
+- Create a CTAKES key at: https://uts.nlm.nih.gov/license.html 
+- Go to the Airflow website at Admin -> Variables and add a new Variable with key CTAKES_KEY and the value the one created at UMLS website 
+
 ## Starting DAGs 
 
 Forward web port: 
@@ -88,6 +92,8 @@ export POD_NAME=$(kubectl get pods --field-selector=status.phase=Running -o go-t
 ```   
 
 Enter at [http://localhost:8080](http://localhost:8080)
+
+![DAGs](images/DAGs.png)
 
 ## Using a custom Docker image
 
