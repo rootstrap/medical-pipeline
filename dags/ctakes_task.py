@@ -30,7 +30,7 @@ t1 = BashOperator(task_id="print_date", bash_command="date", dag=dag)
 
 
 volume_mount = VolumeMount('pv-claim',
-                            mount_path='input/',
+                            mount_path='data/',
                             sub_path=None,
                             read_only=False)
 
@@ -50,8 +50,8 @@ kubernetes_min_pod = KubernetesPodOperator(
     #is_delete_operator_pod=True,
     namespace='airflow',
     env_vars={'CTAKES_KEY':  CTAKES_KEY , 
-              'INPUT_DIR': 'input/input/', 
-              'OUTPUT_DIR':'input/output/'
+              'INPUT_DIR': 'data/input/', 
+              'OUTPUT_DIR':'data/output/'
               },
     volumes=[volume],
     volume_mounts=[volume_mount],

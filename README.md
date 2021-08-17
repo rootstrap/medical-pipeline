@@ -83,6 +83,30 @@ Go to Admin->Connections and add a Connection with the following parameters
 - Create a CTAKES key at: https://uts.nlm.nih.gov/license.html 
 - Go to the Airflow website at Admin -> Variables and add a new Variable with key CTAKES_KEY and the value the one created at UMLS website 
 
+7. Create directories 
+
+```bash 
+	kubectl -f permissions.yaml 
+```
+
+Create directories:   
+
+```bash 
+	export WORKER=$(kubectl get pods  --field-selector=status.phase=Running | grep worker |  awk '{print $1}')
+kubectl exec -ti $WORKER -c worker -- mkdir -p /data/input /data/output /data/results
+```
+
+Delete auxiliar pod:   
+
+```bash 
+	kubectl delete pod efs-bootstrap     
+```
+
+8. Copy files to input dir: 
+```bash 
+kubectl cp files/* $WORKER:/data/input/
+```
+
 ## Starting DAGs 
 
 Forward web port: 
@@ -97,12 +121,12 @@ Enter at [http://localhost:8080](http://localhost:8080)
 
 ## Using a custom Docker image
 
-In this case, we used the [Dockerfile](docker/Dockerfile) the REPO=rootstrap/eks-airflow and the TAG=2.1.2.
+In this case, we used the [Dockerfile](docker/airflow/Dockerfile) the REPO=rootstrap/eks-airflow and the TAG=2.1.2.
 You can modify it to create your own image. Before step 2, you need to push it and then change in the values.yaml file for the corresponding repository and image tag.
 
 ```bash 
 
-	cd docker 
+	cd docker/airflow 
 
 	export TAG=... 
 	export REPO=...
