@@ -76,7 +76,10 @@ Go to Admin->Connections and add a Connection with the following parameters
 - Conn Id: livy_conn_id
 - Conn Type: Apache Livy
 - Description: Apache Livy REST API
-- Host: get the ClusterIP for apache-livy executing: kubectl get services | grep apache-livy | awk '{print $3}'
+- Host: get the ClusterIP for apache-livy executing: 
+	```bash
+		kubectl get services | grep apache-livy | awk '{print $3}'
+	```
 - Port: 8998
 
 6. Set Variable CTAKES_KEY 
@@ -106,6 +109,42 @@ Delete auxiliar pod:
 ```bash 
 kubectl cp files/* $WORKER:/data/input/
 ```
+
+
+9. Create spark custom image 
+- Copy custom files
+
+```bash 
+wget https://downloads.apache.org/spark/spark-3.1.2/spark-3.1.2-bin-hadoop3.2.tgz 
+untar spark-3.1.2-bin-hadoop3.2.tgz 
+cp docker/spark/Dockerfile spark-3.1.2-bin-hadoop3.2/kubernetes/dockerfiles/spark/bindings/python/Dockerfile
+cp docker/spark/uml-concepts.py spark-3.1.2-bin-hadoop3.2/ 
+```
+
+- Download dependency and add it to jars folder 
+```bash
+	cd spark-3.1.2-bin-hadoop3.2/ 
+	wget https://repo1.maven.org/maven2/com/databricks/spark-xml_2.12/0.12.0/spark-xml_2.12-0.12.0.jar .
+	mv spark-xml_2.12-0.12.0.jar jars/
+```
+
+- export environment variables: REPO, TAG
+```bash
+	export REPO=rootstrap
+	export TAG=uml-concepts1.6
+```
+
+- Build image 
+```bash
+    ./bin/docker-image-tool.sh  -r $REPO -t $TAG -p ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile build
+```
+
+- Push image
+```bash 
+	docker push $REPO/spark-py:$TAG
+```
+
+ 
 
 ## Starting DAGs 
 
