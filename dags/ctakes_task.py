@@ -24,12 +24,12 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
 }
 
-dag = DAG("kubernetes-test", default_args=default_args,schedule_interval= '@once')
+dag = DAG("ctakes-dag", default_args=default_args,schedule_interval= '@once')
 
 t1 = BashOperator(task_id="print_date", bash_command="date", dag=dag)
 
 
-volume_mount = VolumeMount('pv-claim',
+volume_mount = VolumeMount('efs-claim',
                             mount_path='data/',
                             sub_path=None,
                             read_only=False)
@@ -39,10 +39,10 @@ volume_mount = VolumeMount('pv-claim',
 volume_config= {
     'persistentVolumeClaim':
       {
-        'claimName': 'pv-claim'
+        'claimName': 'efs-claim'
       }
     }
-volume = Volume(name='pv-claim', configs=volume_config)
+volume = Volume(name='efs-claim', configs=volume_config)
 
 kubernetes_min_pod = KubernetesPodOperator(
     task_id='ctakes_task',
