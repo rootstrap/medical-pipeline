@@ -8,7 +8,7 @@ from datetime import date
 
 
 
-INPUT_DIR = os.environ.get('INPUT_DIR', '/input')
+INPUT_DIR = os.environ.get('INPUT_DIR', '/input/')
 RESULT_DIR = os.environ.get('RESULT_DIR', '/results/')
 
 today = date.today()

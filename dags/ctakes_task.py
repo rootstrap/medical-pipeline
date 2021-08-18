@@ -51,7 +51,7 @@ kubernetes_min_pod = KubernetesPodOperator(
     namespace='airflow',
     env_vars={'CTAKES_KEY':  CTAKES_KEY , 
               'INPUT_DIR': 'data/input/', 
-              'OUTPUT_DIR':'data/output/'
+              'OUTPUT_DIR':'data/output/' + str(datetime.today().strftime('%d%m%Y'))
               },
     volumes=[volume],
     volume_mounts=[volume_mount],

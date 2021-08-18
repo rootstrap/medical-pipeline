@@ -131,7 +131,7 @@ cp docker/spark/uml-concepts.py spark-3.1.2-bin-hadoop3.2/
 - export environment variables: REPO, TAG
 ```bash
 	export REPO=rootstrap
-	export TAG=uml-concepts1.6
+	export TAG=uml-concepts1.8
 ```
 
 - Build image 
@@ -144,14 +144,13 @@ cp docker/spark/uml-concepts.py spark-3.1.2-bin-hadoop3.2/
 	docker push $REPO/spark-py:$TAG
 ```
 
- 
 
 ## Starting DAGs 
 
 Forward web port: 
-```bash 
-export POD_NAME=$(kubectl get pods --field-selector=status.phase=Running -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' | grep 'web')
+```bash export POD_NAME=$(kubectl get pods --field-selector=status.phase=Running -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' | grep 'web')
   kubectl port-forward --namespace airflow $POD_NAME 8080:8080
+
 ```   
 
 Enter at [http://localhost:8080](http://localhost:8080)
