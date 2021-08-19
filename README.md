@@ -105,11 +105,22 @@ Delete auxiliar pod:
 	kubectl delete pod efs-bootstrap     
 ```
 
+Give permissions to result folder: 
+
+```bash 
+kubectl apply -f permission_results.yaml 
+```
+
+Delete auxiliar pod:   
+
+```bash 
+	kubectl delete pod efs-bootstrap     
+```
+
 8. Copy files to input dir: 
 ```bash 
 kubectl cp files/* $WORKER:/data/input/
 ```
-
 
 9. Create spark custom image 
 - Copy custom files
@@ -158,7 +169,7 @@ Enter at [http://localhost:8080](http://localhost:8080)
 
 ![DAGs](images/DAGs.png)
 
-## Using a custom Docker image
+## Using a custom Docker image for Airflow 
 
 In this case, we used the [Dockerfile](docker/airflow/Dockerfile) the REPO=rootstrap/eks-airflow and the TAG=2.1.2.
 You can modify it to create your own image. Before step 2, you need to push it and then change in the values.yaml file for the corresponding repository and image tag.
