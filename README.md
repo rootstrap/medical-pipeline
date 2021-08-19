@@ -131,12 +131,12 @@ cp docker/spark/uml-concepts.py spark-3.1.2-bin-hadoop3.2/
 - export environment variables: REPO, TAG
 ```bash
 	export REPO=rootstrap
-	export TAG=uml-concepts1.8
+	export TAG=uml-concepts1.9
 ```
 
 - Build image 
 ```bash
-    ./bin/docker-image-tool.sh  -r $REPO -t $TAG -p ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile build
+    ./bin/docker-image-tool.sh -u 50000 -r $REPO -t $TAG -p ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile build
 ```
 
 - Push image

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: efs-bootstrap
+  name: rr
 spec:
   containers:
   - name: efs-bootstrap
     image: busybox:latest
-    command: ["chmod"]
-    args: ["777", "/data/results"]
+    command: ["rm"]
+    args: ["-r", "/data/results/19082021/"]
     volumeMounts:
     - name: persistent-storage
       mountPath: /data
@@ -15,3 +15,4 @@ spec:
   - name: persistent-storage
     persistentVolumeClaim:
       claimName: efs-claim
+
