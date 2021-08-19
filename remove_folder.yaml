@@ -7,7 +7,7 @@ spec:
   - name: efs-bootstrap
     image: busybox:latest
     command: ["rm"]
-    args: ["-r", "/data/results/19082021/"]
+    args: ["-r", "/data/results/19082021"]
     volumeMounts:
     - name: persistent-storage
       mountPath: /data

@@ -29,8 +29,8 @@ t1 = BashOperator(task_id="print_date", bash_command="date", dag=dag)
 spark_task = LivyOperator(
     task_id='spark_task',
     file='local:///opt/spark/work-dir/uml_concepts.py', 
-    class_name='org.apache.spark.examples.SparkPi', 
-    args=[10], 
+    polling_interval=5,
+    name="task-" + str(datetime.today().strftime('%Y%m%d%H%M%S')),
     conf={
             "spark.kubernetes.driver.pod.name" : "spark-pi-driver-" + str(datetime.today().strftime('%Y%m%d%H%M%S')),
             "spark.kubernetes.container.image": "rootstrap/spark-py:uml-concepts1.8",
