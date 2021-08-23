@@ -1,16 +1,16 @@
 # medical-pipeline
 
-Data pipeline for processing medical text records. Dummy architecture to create a text medical records pipeline with Airflow, CTakes, Spark and Livy in a EKS cluster. 
+Data pipeline for processing medical text records. Dummy architecture to create a text medical records pipeline with Airflow, CTakes, Spark and Livy in a EKS cluster.          
 
-Airflow is a tool for create ETL pipelines, it provides a web interface to handle DAGs, which are a collection of tasks. Each task can be implemented as you want.    
+Airflow is a tool for create ETL pipelines, it provides a web interface to handle DAGs, which are a collection of tasks. Each task can be implemented as you want.               
 
 In order to process text CTakes is used. A custom Docker container that runs as a Kubernetes pod is in charge of processing XML files with CTakes extracting relevant information and codes that refers to medical terms.  You can find more information about CTakes and the custom image used to start the container at this [repo](https://github.com/rootstrap/ctakes)
 
-When we want to process huge amount of information in parallel, we can use Spark. Apache Livy is a REST interface to execute tasks in a Spark Cluster. The Spark Cluster runs in Kubernetes.  
+When we want to process huge amount of information in parallel, we can use Spark. Apache Livy is a REST interface to execute tasks in a Spark Cluster. The Spark Cluster runs in Kubernetes.             
 
 ## Architecture 
 
-[architecture](images/architecture.jpg)
+![architecture](images/architecture.jpg)
 
 - Airflow and Spark can share the same Kubernetes cluster, each component runs as an independent pod. 
 - Airflow connects to the Spark Cluster through Apache Livy using the LivyOperator. 
@@ -30,15 +30,15 @@ The following changes has been added to the file:
 *Custom Image repository and version*    
 
 ```yaml 
-	airflowHome: /opt/airflow
+airflowHome: /opt/airflow
 
-	defaultAirflowRepository: rootstrap/eks-airflow
+defaultAirflowRepository: rootstrap/eks-airflow
 
-	# Default airflow tag to deploy
-	defaultAirflowTag: "2.1.2"
+# Default airflow tag to deploy
+defaultAirflowTag: "2.1.2"
 
-	# Airflow version (Used to make some decisions based on Airflow Version being deployed)
-	airflowVersion: "2.1.2"
+# Airflow version (Used to make some decisions based on Airflow Version being deployed)
+airflowVersion: "2.1.2"
 ```
 
 *Git Repository* 
@@ -64,7 +64,7 @@ dags:
 If you have problems when upgrading the chart you can uninstall and install again: 
 ```bash 
 	helm uninstall airflow -n airflow 
-	help install  airflow -n airflow .         
+	helm install  airflow -n airflow .         
 ```
 
 4. Install Apache Livy in the cluster with this repository [rootstrap/livy-base](https://github.com/rootstrap/livy-base)
@@ -96,7 +96,7 @@ Create directories:
 
 ```bash 
 	export WORKER=$(kubectl get pods  --field-selector=status.phase=Running | grep worker |  awk '{print $1}')
-kubectl exec -ti $WORKER -c worker -- mkdir -p /data/input /data/output /data/results
+	kubectl exec -ti $WORKER -c worker -- mkdir -p /data/input /data/output /data/results
 ```
 
 Delete auxiliar pod:   
@@ -108,7 +108,7 @@ Delete auxiliar pod:
 Give permissions to result folder: 
 
 ```bash 
-kubectl apply -f permission_results.yaml 
+	kubectl apply -f permission_results.yaml 
 ```
 
 Delete auxiliar pod:   
@@ -119,7 +119,7 @@ Delete auxiliar pod:
 
 8. Copy files to input dir: 
 ```bash 
-kubectl cp files/* $WORKER:/data/input/
+	kubectl cp files/* $WORKER:/data/input/
 ```
 
 9. Create spark custom image 
